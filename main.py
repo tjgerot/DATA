@@ -11,6 +11,7 @@ import os
 # TODO Check tweets for info
 # TODO Fix pyDNS and check for emails with given username
 # TODO Move HTML and pdfs to an "output" dir
+# TODO Embed pdf in HTML
 # TODO Ensure all driver windows close
 # TODO Add export all to PDF cmd argument
 # TODO Add verbose statements to douglas_county()
@@ -508,15 +509,11 @@ def u(username):
 				tld(username,domain)
 	finished_usernames.append(username)
 def douglas_county(name):
-	echo("Setting browser download directory")
 	chromeOptions = webdriver.ChromeOptions()
 	prefs = {"download.default_directory":os.getcwd().replace("\\\\","/")}
 	chromeOptions.add_experimental_option("prefs",prefs)
-	echo("Setting driver path")
 	driverpath = "C:/Users/tjger/Downloads/chromedriver_win32/chromedriver.exe"
-	echo("Creating driver")
 	driver = webdriver.Chrome(executable_path=driverpath, chrome_options=chromeOptions)
-	echo("Accessing DCA page")
 	driver.get("http://douglascone.wgxtreme.com/?d=1")
 	driver.find_elements_by_class_name("x-tab-right")[2].click()
 	driver.implicitly_wait(2)
@@ -645,7 +642,8 @@ def display(html):
 			if len(profile_link) is not 0:
 				html_writer.write("<li><a href='" + profile_link + "' target='_blank'>" + profile_link + "</a></li>")
 		for pdf in pdf_names:
-				html_writer.write("</ul><div style='width:100%;text-align:center;'><iframe style='margin-left:auto;margin-right:auto;' src='" + pdf + "' width='90%' height='700'></iframe>")
+			print(pdf)
+			html_writer.write("</ul><div style='width:100%;text-align:center;'><iframe style='margin-left:auto;margin-right:auto;' src='" + pdf + "' width='90%' height='700'></iframe>")
 		html_writer.write("<p>Social Engineering with Python<br>By Thomas Gerot</p></body></html>")
 		echo("Closing HTML file")
 		html_writer.close()
@@ -725,6 +723,7 @@ if __name__ == "__main__":
 				if any(currentFile.lower().endswith(ext) for ext in exts):
 					os.remove(os.path.join(root, currentFile))
 		if args.douglas is True:
+			real_names = list(set(real_names))
 			for real_name in real_names:
 				if len(real_name.split(" ")) is 2:
 					douglas_county(real_name)

@@ -11,7 +11,6 @@ import os
 # TODO Check tweets for info
 # TODO Fix pyDNS and check for emails with given username
 # TODO Move HTML and pdfs to an "output" dir
-# TODO Embed pdf in HTML
 # TODO Ensure all driver windows close
 # TODO Add export all to PDF cmd argument
 # TODO Add verbose statements to douglas_county()
@@ -525,9 +524,11 @@ def douglas_county(name):
 	time.sleep(3)
 	if not os.path.getsize("output.pdf") > 0:
 		os.remove("output.pdf")
+		return False
 	else:
 		os.rename("output.pdf", name + ".pdf")
 		pdf_names.append(name + ".pdf")
+		return True
 def display(html):
 	echo("Accessing result data")
 	global accounts, real_names, companies, locations, emails, sites, bios, public_keys, bitcoin_addresses, sites, genders, ages, birthdays, profiles, interests, pdf_names
@@ -726,8 +727,9 @@ if __name__ == "__main__":
 			real_names = list(set(real_names))
 			for real_name in real_names:
 				if len(real_name.split(" ")) is 2:
-					douglas_county(real_name)
-				douglas_county(real_name.split(" ")[-1])
+					found = douglas_county(real_name)
+				if found is not True:
+					douglas_county(real_name.split(" ")[-1])
 		tf = time.time()
 		print("Scan time: " + str(round(tf - ti, 3)) + " seconds")
 		display(args.webpage)

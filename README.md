@@ -6,7 +6,7 @@ Deep Alias Tracking Algorithm. A Python 3 implemented social engineering script 
 
 ```shell
 git clone -b master https://github.com/tjgerot/DATA.git
-cd DATA
+cd DATA-master
 pip install -r requirements.txt
 python main.py
 ```
